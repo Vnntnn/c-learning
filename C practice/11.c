@@ -19,4 +19,5 @@ int main()
 
     printf("Average Value = %f\n", result);
     return 0;
+
 }
