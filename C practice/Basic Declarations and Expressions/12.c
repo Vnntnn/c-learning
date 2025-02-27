@@ -4,8 +4,7 @@
 
 int main() {
     char ID[10] = "";
-    float work;
-    float salary;
+    float work, salary;
 
     printf("Input the Employees ID: ");
     scanf("%s", &ID);

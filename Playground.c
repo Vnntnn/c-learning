@@ -1,178 +1,147 @@
-// 0
-/*
-Problem 0: Calculate the Average of N Numbers
-
-Write a program in C to calculate the average of N numbers entered by the user. Your program should:
-
-    Prompt the user to enter the total number of values, N (must be a positive integer).
-    Dynamically allocate memory to store N numbers using pointers.
-    Allow the user to input N numbers.
-    Calculate and display the average of the entered numbers.
-    Free the allocated memory after use.
-
-    Input:
-    Enter the number of elements: 5  
-    Enter the numbers: 10 20 30 40 50
-    Ouput:
-    The average is: 30.00  
-
-    Code down below:
-    #include <stdio.h>
-
-    int main() {
-        int num;
-
-        printf("The number of elements: ");
-        scanf("%d", &num);
-
-        int array[num];  // Array lenght
-        printf("The numbers: ");
-        for (int j = 0; j < num; ++j) {
-            scanf("%d", &array[j]);
-        }
-
-        int avg = 0;
-        for (int i = 0; i < num; i++) {
-            avg += array[i];
-        }
-
-        float size_avg = avg / num;
-        printf("The average is: %.2f", size_avg);
-
-        return 0;
-    }
-*/
-
-
-// 1
-/*
-Problem 1: Find the Largest Number in an Array
-
-Write a program in C to find the largest number in an array of integers entered by the user.
-
-Requirements:
-
-    Ask the user for the number of elements.
-    Dynamically allocate memory for the array using pointers.
-    Input the elements from the user.
-    Find and print the largest number.
-    Free the allocated memory after use.
-
-    Input:
-    Enter the number of elements: 5  
-    Enter the numbers: 12 45 7 90 23  
-    Ouput:
-    The largest number is: 90  
-
-    Code down below:
-    #include <stdio.h>
-
-    int main() {
-        int num;
-        printf("Enter the number of elements: ");
-        scanf("%d", &num);
-
-        int array[num];
-        printf("Enter the numbers: ");
-        for (int i = 0; i < num; ++i) {
-            scanf("%d", &array[i]);
-        }
-
-        int max;
-        for (int j; j < num; j++) {
-            if (max < array[j]) {
-                max = array[j];
-            }
-        }
-
-        printf("The largest number is: %d", max);
-    }
-*/
-
-//2
-/*
-Problem 2: Reverse a String
-
-Write a program in C to reverse a string entered by the user.
-
-Requirements:
-
-    Input a string from the user (maximum 100 characters).
-    Reverse the string without using any library functions like strrev().
-    Print the reversed string.
-
-    Input:
-    Enter a string: hello
-    Output:
-    Reversed string: olleh
-
-    code down below
-    #include <stdio.h>
-    #include <string.h>
-
-    int main() {
-        char text[101];
-        printf("Enter a string: ");
-        scanf("%s", text);
-
-        char newtext[101] = "";
-        int len = strlen(text);
-
-        for (int i = len - 1; i >= 0; i--) { // ย้อนข้อความ
-            int pos = len - 1 - i;
-            newtext[pos] = text[i];
-        }
-        newtext[len] = '\0';
-
-        printf("Reversed string: %s\n", newtext);
-        return 0;
-    }
-*/
-
-//3
-/*
-Problem 3: Count Vowels and Consonants
-
-Write a program in C to count the number of vowels and consonants in a string entered by the user.
-
-Requirements:
-
-    Input a string (maximum 100 characters).
-    Count vowels (a, e, i, o, u) and consonants.
-    Ignore spaces, numbers, and special characters.
-
-    Input:
-    Enter a string: Hello World!  
-    Output:
-    Vowels: 3
-    Consonants: 7
-    code down below
-*/
-
+#include <math.h>
 #include <stdio.h>
+#include <string.h>
+#ifndef _WIN32
+#include <unistd.h>
+#else
+#include <windows.h>
+void usleep(__int64 usec)
+{
+    HANDLE timer;
+    LARGE_INTEGER ft;
 
-int main() {
-    char str[101];
-    int vowels = 0, consonants = 0;
+    ft.QuadPart = -(10 * usec); // Convert to 100 nanosecond interval, negative value indicates relative time
 
-    printf("Enter a string: ");
-    fgets(str, sizeof(str), stdin);
+    timer = CreateWaitableTimer(NULL, TRUE, NULL);
+    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+    WaitForSingleObject(timer, INFINITE);
+    CloseHandle(timer);
+}
+#endif
 
-    for (int i = 0; str[i] != '\0'; i++) {
-        char ch = str[i];
+float A, B, C;
 
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
-                ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U') {
-                vowels++;
-            } else {
-                consonants++;
-            }
+float cubeWidth = 20;
+int width = 160, height = 44;
+float zBuffer[160 * 44];
+char buffer[160 * 44];
+int backgroundASCIICode = '.';
+int distanceFromCam = 100;
+float horizontalOffset;
+float K1 = 40;
+
+float incrementSpeed = 0.6;
+
+float x, y, z;
+float ooz;
+int xp, yp;
+int idx;
+
+float calculateX(int i, int j, int k)
+{
+    return j * sin(A) * sin(B) * cos(C) - k * cos(A) * sin(B) * cos(C) +
+           j * cos(A) * sin(C) + k * sin(A) * sin(C) + i * cos(B) * cos(C);
+}
+
+float calculateY(int i, int j, int k)
+{
+    return j * cos(A) * cos(C) + k * sin(A) * cos(C) -
+           j * sin(A) * sin(B) * sin(C) + k * cos(A) * sin(B) * sin(C) -
+           i * cos(B) * sin(C);
+}
+
+float calculateZ(int i, int j, int k)
+{
+    return k * cos(A) * cos(B) - j * sin(A) * cos(B) + i * sin(B);
+}
+
+void calculateForSurface(float cubeX, float cubeY, float cubeZ, int ch)
+{
+    x = calculateX(cubeX, cubeY, cubeZ);
+    y = calculateY(cubeX, cubeY, cubeZ);
+    z = calculateZ(cubeX, cubeY, cubeZ) + distanceFromCam;
+
+    ooz = 1 / z;
+
+    xp = (int)(width / 2 + horizontalOffset + K1 * ooz * x * 2);
+    yp = (int)(height / 2 + K1 * ooz * y);
+
+    idx = xp + yp * width;
+    if (idx >= 0 && idx < width * height)
+    {
+        if (ooz > zBuffer[idx])
+        {
+            zBuffer[idx] = ooz;
+            buffer[idx] = ch;
         }
     }
+}
 
-    printf("Vowels: %d\n", vowels);
-    printf("Consonants: %d\n", consonants);
+int main()
+{
+    printf("\x1b[2J");
+    while (1)
+    {
+        memset(buffer, backgroundASCIICode, width * height);
+        memset(zBuffer, 0, width * height * 4);
+        cubeWidth = 20;
+        horizontalOffset = -2 * cubeWidth;
+        // first cube
+        for (float cubeX = -cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed)
+        {
+            for (float cubeY = -cubeWidth; cubeY < cubeWidth;
+                cubeY += incrementSpeed)
+            {
+                calculateForSurface(cubeX, cubeY, -cubeWidth, '@');
+                calculateForSurface(cubeWidth, cubeY, cubeX, '$');
+                calculateForSurface(-cubeWidth, cubeY, -cubeX, '~');
+                calculateForSurface(-cubeX, cubeY, cubeWidth, '#');
+                calculateForSurface(cubeX, -cubeWidth, -cubeY, ';');
+                calculateForSurface(cubeX, cubeWidth, cubeY, '+');
+            }
+        }
+        cubeWidth = 10;
+        horizontalOffset = 1 * cubeWidth;
+        // second cube
+        for (float cubeX = -cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed)
+        {
+            for (float cubeY = -cubeWidth; cubeY < cubeWidth;
+                cubeY += incrementSpeed)
+            {
+                calculateForSurface(cubeX, cubeY, -cubeWidth, '@');
+                calculateForSurface(cubeWidth, cubeY, cubeX, '$');
+                calculateForSurface(-cubeWidth, cubeY, -cubeX, '~');
+                calculateForSurface(-cubeX, cubeY, cubeWidth, '#');
+                calculateForSurface(cubeX, -cubeWidth, -cubeY, ';');
+                calculateForSurface(cubeX, cubeWidth, cubeY, '+');
+            }
+        }
+        cubeWidth = 5;
+        horizontalOffset = 8 * cubeWidth;
+        // third cube
+        for (float cubeX = -cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed)
+        {
+            for (float cubeY = -cubeWidth; cubeY < cubeWidth;
+                cubeY += incrementSpeed)
+            {
+                calculateForSurface(cubeX, cubeY, -cubeWidth, '@');
+                calculateForSurface(cubeWidth, cubeY, cubeX, '$');
+                calculateForSurface(-cubeWidth, cubeY, -cubeX, '~');
+                calculateForSurface(-cubeX, cubeY, cubeWidth, '#');
+                calculateForSurface(cubeX, -cubeWidth, -cubeY, ';');
+                calculateForSurface(cubeX, cubeWidth, cubeY, '+');
+            }
+        }
+        printf("\x1b[H");
+        for (int k = 0; k < width * height; k++)
+        {
+            putchar(k % width ? buffer[k] : 10);
+        }
 
+        A += 0.05;
+        B += 0.05;
+        C += 0.01;
+        usleep(8000 * 2);
+    }
     return 0;
 }
