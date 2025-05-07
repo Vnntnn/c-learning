@@ -6,12 +6,10 @@ int main() {
 
     scanf("%s", &t);
     
-    // นับความยาวเอง
     int len = 0;
     while(t[len] != '\0') {
         len++;
     }
-    printf("ความยาวของสตริง: %d\n", len);
 
     char temp = t[0];
 
